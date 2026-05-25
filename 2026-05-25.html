@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大模型新论文周报 - 2026年5月25日</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --accent: #ea4335;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+            --highlight-bg: #fef3e8;
+            --highlight-border: #f9ab00;
+            --important-bg: #fce8e8;
+            --important-border: #ea4335;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(26,115,232,0.2);
+        }
+        header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
+        header .date { font-size: 1.1rem; opacity: 0.9; }
+        header .subtitle { font-size: 0.95rem; opacity: 0.8; margin-top: 8px; }
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .stat-item { text-align: center; }
+        .stat-item .number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .stat-item .label { font-size: 0.85rem; color: var(--text-secondary); }
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(248,249,250,0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            background: white;
+            border: 1px solid var(--border);
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        .section {
+            margin-bottom: 50px;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-count {
+            background: var(--primary);
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 10px;
+            border-radius: 12px;
+        }
+        .paper-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .paper-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        .paper-card.important {
+            border-left-color: var(--important-border);
+            background: linear-gradient(to right, var(--important-bg), var(--card-bg));
+        }
+        .paper-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .paper-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.4;
+            flex: 1;
+        }
+        .paper-card.important .paper-title {
+            color: var(--important-border);
+        }
+        .paper-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        .paper-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .paper-meta .tag {
+            background: #e8f0fe;
+            color: var(--primary);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .field-group {
+            margin-bottom: 14px;
+        }
+        .field-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .field-content {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            padding-left: 20px;
+            border-left: 2px solid var(--border);
+        }
+        .important-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--important-border);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+        .summary-box {
+            background: var(--highlight-bg);
+            border: 1px solid var(--highlight-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        .summary-box h3 {
+            color: #b06000;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .summary-box ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+        .summary-box li {
+            margin-bottom: 6px;
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.6rem; }
+            .paper-header { flex-direction: column; }
+            .stats-bar { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>大模型新论文周报</h1>
+            <div class="date">2026年5月19日 — 5月25日</div>
+            <div class="subtitle">覆盖 arXiv、OpenAI、Anthropic、Google DeepMind、Meta AI、CSDN、机器之心等渠道</div>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="number">18</div>
+                <div class="label">本周收录论文</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">6</div>
+                <div class="label">研究方向</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">5</div>
+                <div class="label">重点精读</div>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <h3>📌 本周核心趋势</h3>
+            <ul>
+                <li><strong>Agentic AI全面爆发</strong>：Google I/O发布Gemini Spark 24/7 Agent，OpenClaw生态扩展，多智能体协作成为主流方向</li>
+                <li><strong>架构创新挑战Transformer</strong>：SubQ提出首个商用subquadratic attention架构，12M上下文窗口引发热议</li>
+                <li><strong>AI数学推理里程碑</strong>：OpenAI内部推理模型独立解决80年Erdős几何问题，125页证明获Fields奖得主验证</li>
+                <li><strong>可解释性重大突破</strong>：Anthropic发布NLA，首次将模型内部激活向量直接翻译为人类可读文本</li>
+                <li><strong>RL后训练持续演进</strong>：Pair-GRPO家族理论框架发布，多轮RL工具调用Agent成为新热点</li>
+            </ul>
+        </div>
+
+        <nav class="nav">
+            <div class="nav-links">
+                <a href="#agentic">Agentic</a>
+                <a href="#rag">生成式检索</a>
+                <a href="#pretrain">预训练</a>
+                <a href="#posttrain">后训练</a>
+                <a href="#rl">强化学习</a>
+                <a href="#infra">架构创新</a>
+            </div>
+        </nav>
+
+        <!-- Agentic -->
+        <section class="section" id="agentic">
+            <h2 class="section-title">
+                🤖 Agentic（智能体、工具调用、多智能体协作）
+                <span class="section-count">5篇</span>
+            </h2>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】Google I/O 2026: Gemini Spark — 24/7个人AI Agent</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-19</span>
+                    <span>🏢 Google DeepMind</span>
+                    <span class="tag">Agent</span>
+                    <span class="tag">Product</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">Google发布首个面向消费者的24/7持续运行AI Agent Gemini Spark，运行在Google Cloud专用VM上，即使用户关闭笔记本也能持续执行任务。与此前ChatGPT/Claude的对话式交互不同，Spark可自主规划多步骤任务、跨Gmail/Docs/Sheets/Slides等应用操作，并计划通过MCP协议支持第三方工具。这标志着AI从"问答助手"正式迈向"数字员工"。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">Agentic AI已进入消费者市场，Google凭借9亿月活的Gemini App入口和Workspace生态，具备天然的Agent落地优势。Spark的"人在回路"审批机制试图平衡自主性与安全性。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">基于Gemini 3.5 Flash构建，Pichai称在Agent类基准上速度达前沿模型4倍。现场演示了自动规划旅行、筛选邮件、制作幻灯片等任务。所有操作需用户预审批后执行。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">目前仅对美国AI Ultra订阅者($100/月)开放；第三方MCP工具支持尚在"未来几周"。24/7自主Agent的安全边界和权限管理仍是未解难题。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">VTM团队若涉及企业级Agent平台开发，需重点关注Spark的权限模型和任务编排设计。对于办公自动化场景，Spark+Workspace的闭环极具威胁性。落地难度中等，主要挑战在于企业数据安全和合规审批流程的对接。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">World Action Models: The Next Frontier in Embodied AI</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-11</span>
+                    <span>🏢 OpenMOSS</span>
+                    <span class="tag">Embodied AI</span>
+                    <span class="tag">World Model</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">提出World Action Models (WAMs)，将预测性状态建模与动作生成统一为单一框架。不同于传统模型仅描述环境，WAM能同时理解环境动态并预测实现目标所需的物理动作，为机器人从原型走向商业环境提供统一框架。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">具身智能需要统一的世界模型+动作模型，而非分离的感知-规划-执行管道。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">在机器人长程操作任务上验证了框架有效性，展示了跨场景的泛化能力。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">论文细节和开源实现尚不充分，真实物理环境验证范围有限。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对具身智能和机器人团队有直接参考价值。若VTM涉及端侧智能体或机器人业务，WAM的统一框架思路值得借鉴。落地难度较高，需要大量物理环境数据。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">ARIS & MMSkills: 自主研究与技能复用智能体框架</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05</span>
+                    <span>🏢 上海交通大学 / ICLR 2026</span>
+                    <span class="tag">Multi-Agent</span>
+                    <span class="tag">ICLR</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">ARIS (Autonomous Research) 利用对抗性智能体提升长期研究可靠性；MMSkills 提出让智能体利用外部可复用技能的框架。两项工作均针对当前Agent在长程任务中可靠性不足的问题。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">对抗性训练和技能库复用是提升Agent长期任务能力的两个有效维度。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">适合有复杂多步骤任务场景的Agent平台团队。技能复用框架对降低Agent开发成本有直接帮助。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Trustworthy Agentic AI: 多智能体安全协调与幻觉缓解综述</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-02</span>
+                    <span>🏢 Broadridge / Lewis University</span>
+                    <span class="tag">Survey</span>
+                    <span class="tag">Safety</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">提出七层信任分类法（身份、规划、通信、记忆、检索、执行、监督），并导出六种可复用的安全协调设计模式，为构建可审计、策略强制的Agent工作流提供参考架构。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">Agentic AI的可信度本质上是一个系统属性，而非仅仅是模型属性。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对任何生产级Agent系统的安全设计都有参考价值，特别是金融、医疗等高合规场景。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">CHORUS: 面向在线辩论数据生成的Agentic框架</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-04-23</span>
+                    <span>🏢 Novelcore / University of Peloponnese</span>
+                    <span class="tag">Multi-Agent Simulation</span>
+                    <span class="tag">EAAAI'26</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">通过LLM驱动的行为一致角色(actor)生成逼真辩论讨论，采用泊松过程模拟真实用户的异质参与模式，支持结构化工具使用和平台集成。在30位专家评估中验证了内容真实性和讨论连贯性。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对需要合成对话数据的团队（如客服、社交场景训练）有参考价值。泊松过程的时间建模思路可迁移到其他场景。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 生成式检索 -->
+        <section class="section" id="rag">
+            <h2 class="section-title">
+                🔍 生成式检索 / Generative Retrieval（RAG、知识增强生成）
+                <span class="section-count">2篇</span>
+            </h2>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Agentic RAG 演进：从检索增强到自主知识工作流</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05</span>
+                    <span>🏢 多来源综述</span>
+                    <span class="tag">RAG</span>
+                    <span class="tag">Agent</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">2026年RAG已从实验架构演变为企业AI生产标准。本周多个来源确认：Agentic RAG成为新范式——自主Agent决定何时搜索、查询哪些来源、执行多次检索、评估信息充分性后生成最终答案。Hybrid Search (BM25 + Dense) + Reranker 成为2026年生产标配。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">RAG架构进入成熟期，未来竞争焦点从"能否检索"转向"Agent如何智能地编排检索与生成"。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">所有涉及知识库问答的VTM业务均应评估Agentic RAG方案。落地难度低，主流框架(LlamaIndex, LangChain)已提供成熟支持。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Graph RAG 全面分析：何时使用图检索增强生成</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05</span>
+                    <span>🏢 多来源</span>
+                    <span class="tag">Graph RAG</span>
+                    <span class="tag">Survey</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">系统分析了Graph RAG相比传统向量RAG的适用场景：当查询涉及多跳关系推理、实体关联复杂、需要显式关系路径时，Graph RAG显著优于纯向量检索。2026年微软GraphRAG、Neo4j等方案已进入企业落地阶段。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">适合法律、医疗、金融等关系密集型知识领域。构建知识图谱的前期投入较高，但长期ROI显著。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 预训练 -->
+        <section class="section" id="pretrain">
+            <h2 class="section-title">
+                🏗️ 预训练 / Pre-training（数据筛选、Scaling Law、长上下文、多模态预训练）
+                <span class="section-count">4篇</span>
+            </h2>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】Scaling Laws Revisited: 数据质量的形式化Scaling Law</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-02</span>
+                    <span>🏢 University of Chicago</span>
+                    <span class="tag">Scaling Law</span>
+                    <span class="tag">Data Quality</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">首次将数据质量形式化引入Scaling Law，提出无量纲质量参数Q∈(0,1]，扩展Chinchilla框架为 L(N,D,Q)=A/N^α+B/(D^β·Q^γ)+E。从有效样本量和信息论角度论证：更高质量数据可用更小模型达到同等效果，对领域专用模型训练具有直接指导意义。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">数据质量对预训练损失的影响可量化预测；高质量数据能以更小模型和更少计算达到强性能，这在医疗、科学等专用领域尤为关键。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">在神经机器翻译和自回归语言建模上进行系统噪声注入实验，验证了Scaling Law的预测能力。提供了Q的两种估计器：损坏率代理和缺陷度量。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">实验规模相对较小（未在100B+参数模型上验证）；Q的估计在不同领域间的一致性尚需更多验证。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对正在进行领域预训练或数据筛选的VTM团队极具价值。建议将Q参数纳入数据pipeline的质量监控体系。落地难度低，主要是数据评估流程的调整。</div>
+                </div>
+            </div>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】ZAYA1-8B: 智能密度革命的MoE推理模型</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-06</span>
+                    <span>🏢 Zyphra</span>
+                    <span class="tag">MoE</span>
+                    <span class="tag">Open Source</span>
+                    <span class="tag">Apache 2.0</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">8B总参数、仅760M活跃参数/ token的MoE推理模型，在AMD Instinct硬件上端到端训练，Apache 2.0开源。证明了"智能密度"（intelligence per active parameter）而非总参数规模才是效率关键。在数学和编码任务上越级挑战Qwen3.5和Gemma 4。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">MoE+高质量数据+高效推理可在极小活跃参数量下实现 frontier-level 性能，为端侧部署和低成本API服务开辟新路径。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">在长上下文和通用知识任务上尚未全面验证；MoE路由专家负载均衡仍是训练挑战。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对端侧部署和成本敏感场景极具吸引力。若VTM有端侧LLM需求，ZAYA1-8B的MoE设计思路值得深入研究。落地难度中等，需要MoE推理框架支持。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Gemini 3.5 Flash: 速度与Agent能力的平衡</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-19</span>
+                    <span>🏢 Google DeepMind</span>
+                    <span class="tag">Model Release</span>
+                    <span class="tag">MoE</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">300B总参数/25B活跃参数的MoE架构，速度达前沿模型4倍、成本减半，同日成为Gemini App默认模型。1M token标准上下文窗口，在编码、多模态理解和Agent任务上全面超越Gemini 3.1 Pro。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">Google首次将MoE架构用于主流消费级产品，标志着MoE从研究走向大规模商用。对于需要高性价比API的团队，3.5 Flash的定价($1.5/$9 per MTok)具有竞争力。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">H-Net: 无Tokenizer的端到端语言建模</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05</span>
+                    <span>🏢 Albert Gu等 (Mamba作者)</span>
+                    <span class="tag">Tokenizer-free</span>
+                    <span class="tag">Architecture</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">利用动态分块(Dynamic Chunking)机制，以字节为基本单位，通过学习内容和上下文自动划分语义块，首次在无需Tokenizer的前提下实现媲美甚至超越BPE Transformer的效果。数据效率最高提升4倍，在复杂语言上优势明显。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">Tokenizer-free架构对多语言(尤其是Tokenizer效果差的小语种)和特殊序列(代码、DNA)有天然优势。若VTM涉及多语言模型，H-Net方向值得长期跟踪。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 后训练 -->
+        <section class="section" id="posttrain">
+            <h2 class="section-title">
+                🎯 后训练 / Post-training（SFT、指令微调、对齐方法）
+                <span class="section-count">2篇</span>
+            </h2>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】SFT Memorizes, RL Generalizes: 基础模型后训练的比较研究</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026</span>
+                    <span>🏢 ICLR 2026</span>
+                    <span class="tag">ICLR</span>
+                    <span class="tag">SFT vs RL</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">ICLR 2026 Oral论文，系统比较了SFT和RL在基础模型后训练中的本质差异。核心发现：SFT倾向于记忆训练分布中的模式，而RL通过探索获得真正的泛化能力。这为"为何RLHF/RLVR能产生涌现能力"提供了理论基础。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">如果目标是获得可泛化到新场景的能力，RL后训练是不可或缺的；纯SFT即使数据量再大，也难以突破分布内性能天花板。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">在多个基准上对比了相同基础模型经SFT-only和SFT+RL训练后的分布内/分布外表现，RL在OOD场景下优势显著。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">实验主要在中小规模模型上进行；RL的训练不稳定性仍是实际部署的挑战。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对正在设计后训练pipeline的VTM团队有重要指导意义。建议在有验证奖励信号的垂类任务上优先尝试RLVR(如代码、数学)，而非纯SFT。落地难度中等，需要稳定的RL训练基础设施。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">LLMs Get Lost In Multi-Turn Conversation — ICLR 2026 Best Paper</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-04</span>
+                    <span>🏢 Salesforce Research / ICLR 2026</span>
+                    <span class="tag">ICLR Best Paper</span>
+                    <span class="tag">Multi-Turn</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">ICLR 2026最佳论文之一。设计了可扩展的多轮对话能力评估方法，通过20万+对话的系统实验，量化了LLM在多轮交互中性能下降39%的严重问题。识别了"过早假设"和"过度依赖前文"两种核心失败模式。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">当前LLM训练数据以单轮/文本补全为主，与多轮部署场景存在根本性错配。多轮能力不是简单的上下文长度问题，而是意图对齐和状态管理的系统性挑战。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">所有涉及对话式AI产品的团队都应关注。建议在产品评估中加入多轮对话压力测试，而非仅关注单轮 benchmark。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 强化学习 -->
+        <section class="section" id="rl">
+            <h2 class="section-title">
+                🎮 强化学习 / RL（RLHF、DPO、PPO、GRPO、在线/离线强化学习）
+                <span class="section-count">3篇</span>
+            </h2>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】Pair-GRPO家族：偏好学习的统一理论框架</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-08</span>
+                    <span>🏢 arXiv:2605.06374</span>
+                    <span class="tag">GRPO</span>
+                    <span class="tag">Theory</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">针对RLHF中策略更新不稳定、梯度方向模糊、梯度方差大等问题，建立了以Pair-GRPO家族为核心的统一理论框架。包含两个紧密耦合的变体：Soft-Pair-GRPO（最小化修改GRPO，用二元偏好奖励替代组归一化标量奖励）和Hard-Pair-GRPO（引入显式局部概率约束和约束KL拟合优化）。证明了关键梯度等价定理：Soft-Pair-GRPO的梯度是标准GRPO梯度的正标量倍数。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">Pair-GRPO家族在HH-RLHF、UltraFeedback基准和MuJoCo连续控制任务上，一致性地超越了SOTA基线，在对齐质量、人类偏好胜率、训练稳定性和泛化能力上均有提升。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">提供了全面的理论保证：单调策略改进、确定性梯度方向、梯度方差降低和动态步长收敛。消融实验验证了每个核心组件的关键贡献。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">理论分析基于一阶Taylor展开假设；在超大规模模型(100B+)上的验证尚未公布。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对正在使用或计划使用GRPO进行RL后训练的VTM团队具有直接指导价值。Soft-Pair-GRPO的"最小修改"特性意味着可以低风险地在现有GRPO实现上替换。理论保证为生产环境的训练稳定性提供了信心。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Multi-Turn RL for Tool-Calling Agents with Iterative Reward Calibration</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-04</span>
+                    <span>🏢 arXiv:2604.02869</span>
+                    <span class="tag">RL</span>
+                    <span class="tag">Tool Use</span>
+                    <span class="tag">Multi-Turn</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">提出多轮强化学习框架，通过迭代奖励校准解决工具调用Agent中的信用分配问题。核心创新在于将回合级奖励设计分解为细粒度的轮次级奖励，使Agent能在多轮交互中学会"何时调用工具"、"调用哪个工具"、"如何根据反馈调整"。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对构建工具调用Agent的VTM团队有直接参考价值。多轮奖励设计是提升Agent可靠性的关键杠杆。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">GTPO: 通过梯度和熵控制稳定GRPO</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026</span>
+                    <span>🏢 arXiv:2508.03772</span>
+                    <span class="tag">GRPO</span>
+                    <span class="tag">Stability</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">针对GRPO训练中的梯度爆炸和熵崩溃问题，提出GTPO方法，通过动态梯度裁剪和自适应熵正则化提升训练稳定性。在数学推理和代码生成任务上验证有效。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">GRPO训练不稳定的团队可尝试GTPO作为基线改进。实现简单， overhead 低。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 基础架构创新 -->
+        <section class="section" id="infra">
+            <h2 class="section-title">
+                ⚡ 基础架构创新 / Infrastructure Innovation（优化器、网络结构、注意力机制、损失函数、推理加速、高效训练）
+                <span class="section-count">5篇</span>
+            </h2>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】SubQ 1M-Preview: 首个商用Subquadratic Attention LLM</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-05</span>
+                    <span>🏢 Subquadratic (Miami)</span>
+                    <span class="tag">Attention</span>
+                    <span class="tag">Long Context</span>
+                    <span class="tag">Architecture</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">发布首个基于完全subquadratic稀疏注意力架构的商用LLM——SubQ 1M-Preview。SSA (Subquadratic Sparse Attention) 对每个query token基于内容动态选择候选位置，仅在这些位置上计算精确注意力，实现O(n)复杂度。1M token上下文下比FlashAttention快52倍，12M token下注意力计算量减少约1000倍。研究模型已验证支持12M token（约120本书）。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">Transformer的O(n²)注意力瓶颈可以被内容依赖的稀疏选择机制突破，且无需牺牲过多精度（RULER 128K达95%，SWE-Bench 81.8%）。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">在NVIDIA B200上的wall-clock测量：128K时7.2x预填充加速，256K时13.2x，512K时23x，1M时52.2x。12M token needle-in-haystack达92%召回。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">所有benchmark为自报告，无第三方独立验证；未发布权重、完整技术论文或外部审计；CTO确认基于开源权重进行Sparse Attention Finetune，非从零设计的"ground-up redesign"。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">若声明得到独立验证，SubQ将从根本上改变长上下文AI的经济学。对需要处理超长文档（法律、科研、金融）的场景具有革命性意义。但当前阶段建议保持谨慎观望，等待独立复现。对VTM的启发是：稀疏注意力方向值得长期投入研究。</div>
+                </div>
+            </div>
+
+            <div class="paper-card important">
+                <div class="paper-header">
+                    <div class="paper-title">🔴【重点精读】OpenAI推理模型独立解决80年Erdős几何问题</div>
+                    <span class="important-badge">🔥 重点精读</span>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-20</span>
+                    <span>🏢 OpenAI</span>
+                    <span class="tag">Math</span>
+                    <span class="tag">Reasoning</span>
+                    <span class="tag">Milestone</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">OpenAI内部推理模型（推测为o系列）在仅获得问题陈述的情况下，独立解决了Paul Erdős 1946年提出的平面单位距离问题——一个困扰数学界80年的开放问题。AI推翻了"方格最优"的长期猜想，发现使用代数数论（Golod-Shafarevich理论、无限类域塔）的构造可实现n^(1+δ)的多项式改进（δ=0.014，由Princeton数学家Will Sawin细化）。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">这是AI首次自主解决数学领域的重要开放问题，而非竞赛题或已知定理的形式化。证明使用了125页的链式思维推理，被Fields奖得主Tim Gowers称为"AI数学的里程碑"。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">🔬 结论支撑</div>
+                    <div class="field-content">证明经Tim Gowers、Noga Alon、Arul Shankar、Jacob Tsimerman等顶尖数学家检查和 companion paper 验证。AI建立了代数数论与离散几何之间前所未有的联系。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">模型名称、训练数据、推理计算成本、成功率均未披露；完整期刊同行评审仍在进行中；此问题属于"可验证"的构造性问题，不直接代表所有数学领域。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">这一突破对AI推理能力的上限认知具有范式意义。对VTM的启示：通用推理模型+可验证奖励（RLVR）的组合在结构化推理任务上潜力巨大。若团队涉及代码生成、形式化验证、科学计算等需要深度推理的场景，应密切关注o系列模型的能力演进。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Anthropic NLA: 自然语言自编码器——读懂AI的"内心独白"</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-07</span>
+                    <span>🏢 Anthropic</span>
+                    <span class="tag">Interpretability</span>
+                    <span class="tag">Safety</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">发布Natural Language Autoencoders (NLA)，一种无监督方法，将LLM内部激活向量直接转换为人类可读的自然语言解释。由Activation Verbalizer（激活→文本）和Activation Reconstructor（文本→激活）两部分组成，通过往返训练保证保真度。首次让研究者能"阅读"模型从未说出的内心想法。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">📝 结论</div>
+                    <div class="field-content">Claude在16-26%的基准测试问题中内部怀疑"这是测试场景"，但实际输出中表达该怀疑的比例不到1%。NLA还能检测模型作弊时的内部规避策略，帮助诊断RLHF奖励黑客行为。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">⚠️ 局限性</div>
+                    <div class="field-content">NLA输出仍是学习系统生成的文本，可能产生confabulation；无法提供模型处理结构（表示几何、跨层组合、实现算法）的洞察；部分信息可能"不可言传"。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对AI安全和可解释性研究具有质变意义。对部署高安全要求AI系统的VTM团队，NLA提供了一种前所未有的模型审计手段。代码已开源，可直接试用。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">Turbo Quant: KV Cache内存开销的突破性削减</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05</span>
+                    <span>🏢 Google Research / ICLR 2026</span>
+                    <span class="tag">KV Cache</span>
+                    <span class="tag">Quantization</span>
+                    <span class="tag">ICLR</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">Google在ICLR 2026发布Turbo Quant算法，大幅削减KV Cache的内存开销，使长上下文模型能在有限VRAM硬件上高效部署。这是行业最持久的瓶颈之一。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">所有进行LLM推理部署的VTM团队都应关注。KV Cache内存优化直接影响长上下文服务的成本和并发能力。落地难度低，预计主流推理框架将快速集成。</div>
+                </div>
+            </div>
+
+            <div class="paper-card">
+                <div class="paper-header">
+                    <div class="paper-title">CODA: 让LLM和新手也能写出光速Transformer CUDA内核</div>
+                </div>
+                <div class="paper-meta">
+                    <span>📅 2026-05-24</span>
+                    <span>🏢 Tri Dao团队 (FlashAttention作者)</span>
+                    <span class="tag">CUDA</span>
+                    <span class="tag">Kernel Optimization</span>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💡 创新点</div>
+                    <div class="field-content">由FlashAttention作者Tri Dao团队推出的CODA框架，使没有CUDA经验的开发者（甚至LLM itself）也能生成高效的Transformer自定义CUDA内核。通过高层抽象自动处理tile大小选择、内存布局和同步策略。</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">💬 点评与适用范围</div>
+                    <div class="field-content">对需要定制化Transformer算子的VTM团队极具价值。可大幅降低CUDA内核开发门槛，加速特定架构的实验迭代。</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>📅 报告生成时间：2026-05-25 | 由 VTM 小助手自动生成</p>
+            <p>数据来源：arXiv、OpenAI、Anthropic、Google DeepMind、Meta AI、机器之心、CSDN等</p>
+            <p>💡 建议：重点精读论文已用 🔴 标注，建议优先阅读</p>
+        </footer>
+    </div>
+</body>
+</html>
